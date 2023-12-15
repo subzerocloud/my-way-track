@@ -51,6 +51,38 @@ if (!GOTRUE_JWT_SECRET) process.env.GOTRUE_JWT_SECRET = JWT_SECRET
 
 const dbPool = new Client(DB_URI.replace('sqlite://',''));
 
+function compareObjects(parent: any, child: any): boolean {
+    if (Array.isArray(parent)) {
+        if (Array.isArray(child)) {
+            return child.every(childElement => 
+                parent.some(parentElement => compareObjects(parentElement, childElement)));
+        } else {
+            // If parent is an array and child is not, check if child is an element of parent
+            return parent.some(parentElement => compareObjects(parentElement, child));
+        }
+    } else if (parent && child && typeof parent === 'object' && typeof child === 'object') {
+        return Object.keys(child).every(key => 
+            parent.hasOwnProperty(key) && compareObjects(parent[key], child[key]));
+    }
+    return parent === child;
+}
+
+function cs(parentJsonStr: string, childJsonStr: string): number {
+    let parentJson: any;
+    let childJson: any;
+
+    try {
+        parentJson = JSON.parse(parentJsonStr as string);
+        childJson = JSON.parse(childJsonStr as string);
+    } catch (e) {
+        // If JSON parsing fails, return false
+        return 0;
+    }
+    return compareObjects(parentJson, childJson)? 1 : 0;
+}
+
+dbPool.function('cs', cs );
+
 
 // Create the Express application
 const app = express();
