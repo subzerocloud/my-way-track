@@ -2,11 +2,10 @@
 import { useState, ReactElement, useEffect } from 'react';
 //import UserIcon from '@mui/icons-material/People';
 import {
-    Admin, DataProvider, Resource, Layout,
-    AppBar, InspectorButton, TitlePortal,
+    Admin, DataProvider, Resource,
     UserIdentity,
     CustomRoutes, mergeTranslations,
-    Loading, Menu,
+    Loading,
 } from 'react-admin';
 import { Route } from 'react-router-dom';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
@@ -21,6 +20,7 @@ import {
     raSubzeroEnglishMessages, ClientProvider,
 } from '@subzerocloud/ra-subzero';
 import Dashboard from './components/Dashboard';
+import Layout from './components/Layout';
 
 const instanceUrl = import.meta.env.VITE_API_URL || window.location.origin
 const defaultListOp = 'eq'; // default operator for list filters
@@ -31,17 +31,6 @@ const client = createClient(instanceUrl);
 const i18nProvider = polyglotI18nProvider(() => {
     return mergeTranslations(englishMessages, raSubzeroEnglishMessages);
 }, 'en');
-
-// we use a custom layout and app bar to add the inspector button (triggers UI customization)
-const MyAppBar = () => <AppBar><TitlePortal /><InspectorButton /></AppBar>;
-const MyMenu = () =>
-    <div className="h-full">
-        <Menu hasDashboard={true} />
-        <a href="https://subzero.cloud" className="absolute bottom-0 left-0 ">
-            <img className="w-24 ml-5 mb-5" src="https://subzero.cloud/builtwithlogo.svg" />
-        </a>
-    </div>;
-const MyLayout = (props: any) => <Layout {...props} appBar={MyAppBar} menu={MyMenu} />;
 
 export const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -142,7 +131,7 @@ export const App = () => {
                 />
             }
             i18nProvider={i18nProvider}
-            layout={MyLayout}
+            layout={Layout}
             // wait for the schema to be loaded before rendering the dashboard
             dashboard={() => {
                 return schema ?
