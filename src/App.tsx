@@ -5,7 +5,7 @@ import {
     Admin, DataProvider, Resource,
     UserIdentity,
     CustomRoutes, mergeTranslations,
-    Loading,
+    Loading, Edit, Create
 } from 'react-admin';
 import { Route } from 'react-router-dom';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
@@ -21,6 +21,9 @@ import {
 } from '@subzerocloud/ra-subzero';
 import Dashboard from './components/Dashboard';
 import Layout from './components/Layout';
+import { OpportunityList } from './components/OpportunityList';
+import { OpportunityShow } from './components/OpportunityShow';
+import { OpportunityForm } from './components/OpportunityForm';
 
 const instanceUrl = import.meta.env.VITE_API_URL || window.location.origin
 const defaultListOp = 'eq'; // default operator for list filters
@@ -101,16 +104,15 @@ export const App = () => {
 
     // Add customized resources here (use custom List, Edit, Show components)
     const customizedResources: ReactElement[] = [
-        // <Resource
-        //     key="todos"
-        //     name="todos"
-        //     create={canAccess('create','todos')?<CreateGuesser canAccess={canAccess} />:undefined}
-        //     list={canAccess('list','todos')?<ListGuesser canAccess={canAccess} />:undefined}
-        //     edit={canAccess('edit','todos')?<EditGuesser canAccess={canAccess} />:undefined}
-        //     show={canAccess('show','todos')?<CreateGuesser canAccess={canAccess} />:undefined}
-        //     options={{ label: 'Todos', model: schema?.todos, filterToQuery: s => ({ 'title@ilike': `%${s}%` }) }}
-        //     recordRepresentation={(r) => `${r.title}`}
-        // />,
+        <Resource
+            key="opportunities"
+            name="opportunities"
+            list={canAccess('list','opportunities')?<OpportunityList />:undefined}
+            show={canAccess('show','opportunities')?<OpportunityShow />:undefined}
+            edit={canAccess('edit','opportunities')?<Edit><OpportunityForm /></Edit>:undefined}
+            create={canAccess('create','opportunities')?<Create><OpportunityForm /></Create>:undefined}
+            options={{ label: 'Opportunities', model: schema?.opportunities }}
+        />
     ];
 
     const definedResourceNames: string[] = customizedResources.map((resource) => resource.props.name);
