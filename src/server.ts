@@ -174,28 +174,6 @@ app.get('/functions/v1/schema', optionalAuth, schemaHandler);
 app.get('/permissions', optionalAuth, permissionsHandler);
 app.get('/functions/v1/permissions', optionalAuth, permissionsHandler);
 
-// custom route example
-async function totalRows(req: Request, res: Response) {
-    const db = dbPool
-    db.exec(`analyze`);
-    const rows = db.prepare(`
-        select 
-            'public' as table_schema,
-            tbl as table_name,
-            stat 
-        from sqlite_stat1
-    `).all();
-    const result = rows.map(({ table_schema, table_name, stat }) => ({
-        table_schema,
-        table_name,
-        row_count: parseInt(stat.split(' ')[0]),
-    }));
-    
-    res.json(result);
-}
-app.get('/functions/total-rows', isAuthenticated, totalRows);
-app.get('/functions/v1/total-rows', isAuthenticated, totalRows);
-
 // Serve static files from the 'public' directory
 if (staticDir && fs.existsSync(staticDir)) {
     app.use(express.static(staticDir));
@@ -220,13 +198,10 @@ export async function init() {
         // "total length of command line and environment variables exceeds limit"
         // customEnv: env.parsed,
     });
-
     // Initialize the rest module
     await restInit(app, 'sqlite', dbPool, dbSchemas, {
-        
-        
         permissions,
-        
+        allowedSelectFunctions: ['count', 'strftime', 'sum', 'timediff', 'avg','unixepoch','sub'],
         debugFn: debug('subzero:rest'),
     });
 }
