@@ -22,8 +22,17 @@ const red = "\x1b[31m";
 
 
 
-
+let sqlite3IsInstalled: boolean|undefined = undefined;
 const runSql = (file: string, dbUri: string, rootDir: string) => {
+    // check if sqlite3 is installed
+    if (sqlite3IsInstalled === undefined) {
+        const r = spawnSync('sqlite3', ['--version'], { stdio: 'ignore' });
+        sqlite3IsInstalled = r.status === 0;
+    }
+    if (!sqlite3IsInstalled) {
+        console.error(`${red}sqlite3 is not installed. Please install it and try again.${reset}`);
+        process.exit(1);
+    }
     const normalizedFile = resolve(rootDir, file);
     const normalizedDbUri = resolve(rootDir, dbUri);
     const sqlDir = dirname(normalizedFile);
@@ -131,16 +140,6 @@ export default function subzeroPlugin(projectRootDir, config?: PluginConfig): Pl
         prodServerFile: './dist/server.cjs',
         ...config
     }
-
-    
-    // check if sqlite3 is installed
-    const result = spawnSync('sqlite3', ['--version'], { stdio: 'ignore' });
-    if (result.status !== 0) {
-        console.error(`${red}sqlite3 is not installed. Please install it and try again.${reset}`);
-        process.exit(1);
-    }
-    
-    
 
     return {
         name: 'configure-server',
