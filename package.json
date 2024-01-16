@@ -17,7 +17,6 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@libsql/client": "^0.4.0-pre.7",
     "@subzerocloud/auth": "^2.0.0",
     "@subzerocloud/rest": "^2.0.0",
     "better-sqlite3": "^9.2.2",

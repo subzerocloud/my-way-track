@@ -16,8 +16,7 @@ import { init as authInit, getRequestHandler as auth } from '@subzerocloud/auth'
 import { init as restInit, getRequestHandler as rest, getSchemaHandler, getPermissionsHandler, onSubzeroError } from '@subzerocloud/rest'
 
 
-//import Client from 'better-sqlite3';
-import { createClient } from "@libsql/client";
+import Client from 'better-sqlite3';
 import permissions from './permissions'
 
 
@@ -49,11 +48,7 @@ if (!GOTRUE_JWT_SECRET) process.env.GOTRUE_JWT_SECRET = JWT_SECRET
 
 // Create a database connection pool
 
-//const dbPool = new Client(DB_URI.replace('sqlite://', ''));
-const dbPool = createClient({
-    url: DB_URI,
-    authToken: TURSO_TOKEN
-});
+const dbPool = new Client(DB_URI.replace('sqlite://', ''));
 
 
 function compareObjects(parent: any, child: any): boolean {
@@ -86,7 +81,7 @@ function cs(parentJsonStr: string, childJsonStr: string): number {
     return compareObjects(parentJson, childJson)? 1 : 0;
 }
 
-//dbPool.function('cs', cs );
+dbPool.function('cs', cs );
 
 
 // Create the Express application
@@ -197,7 +192,7 @@ app.use(onSubzeroError);
 
 export async function init() {
     // Initialize the auth module
-    await authInit('sqlite', dbPool, nodemailer, {
+    await authInit('sqlite', Client, nodemailer, {
         logFn: debug('subzero:auth'),
         // uncomment this line if you get the error:
         // "total length of command line and environment variables exceeds limit"
