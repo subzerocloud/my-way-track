@@ -17,6 +17,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@libsql/client": "^0.4.0-pre.7",
     "@subzerocloud/auth": "^2.0.0",
     "@subzerocloud/rest": "^2.0.0",
     "better-sqlite3": "^9.2.2",
@@ -26,7 +27,6 @@
     "@raphiniert/ra-data-postgrest": "github:subzerocloud/ra-data-postgrest#distribution"
   },
   "devDependencies": {
-    
     "@mui/icons-material": "^5.0.0",
     "@mui/material": "^5.0.0",
     "@subzerocloud/ra-subzero": "^2.0.0",
