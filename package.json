@@ -2,25 +2,21 @@
   "name": "my-way-track",
   "private": true,
   "version": "0.0.1",
-  "main": "dist/server.js",
   "type": "module",
   "files": [
     "dist"
   ],
   "scripts": {
     "dev": "vite",
-    "build:frontend": "vite build",
-    "build:backend": "node esbuild.mjs",
-    "build": "npm run clean && npm run build:backend && npm run build:frontend",
+    "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@subzerocloud/auth": "^2.0.0",
-    "@subzerocloud/rest": "^2.0.0",
-    "better-sqlite3": "^9.2.2",
-    "express": "^4.18.2"
+    "@sqlite.org/sqlite-wasm": "^3.44.2-build1",
+    "@subzerocloud/rest-web": "^2.0.0",
+    "itty-router": "^4.0.23"
   },
   "overrides": {
     "@raphiniert/ra-data-postgrest": "github:subzerocloud/ra-data-postgrest#distribution"
@@ -31,30 +27,12 @@
     "@subzerocloud/ra-subzero": "^2.0.0",
     "@supabase/supabase-js": "^2.0.0",
     "@tremor/react": "^3.6.0",
-    "@types/better-sqlite3": "^7.6.4",
-    "@types/cookie-parser": "^1.4.3",
-    "@types/cors": "^2.8.13",
-    "@types/express": "^4.17.17",
-    "@types/jsonwebtoken": "^9.0.2",
-    "@types/morgan": "^1.9.4",
-    "@types/node": "^20.1.5",
-    "@types/nodemailer": "^6.4.14",
-    "@types/passport": "^1.0.12",
-    "@types/passport-jwt": "^3.0.8",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.14",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "dotenv-expand": "^10.0.0",
-    "esbuild": "^0.19.2",
-    "esbuild-plugin-copy": "^2.1.1",
-    "morgan": "^1.10.0",
-    "nodemailer": "^6.9.7",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1",
     "postcss": "^8.4.27",
     "ra-core": "^4.7.0",
     "ra-ui-materialui": "^4.7.1",
@@ -66,6 +44,6 @@
     "react-router-dom": "^6.0.0",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2",
-    "vite": "^5.0.0"
+    "vite": "^5.0.11"
   }
 }
