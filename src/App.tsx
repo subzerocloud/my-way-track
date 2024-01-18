@@ -20,10 +20,11 @@ import {
     raSubzeroEnglishMessages, ClientProvider,
 } from '@subzerocloud/ra-subzero';
 import Dashboard from './components/Dashboard';
-import Layout from './components/Layout';
+import { OpportunityCreate } from './components/OpportunityCreate';
+import { OpportunityEdit } from './components/OpportunityEdit';
 import { OpportunityList } from './components/OpportunityList';
 import { OpportunityShow } from './components/OpportunityShow';
-import { OpportunityForm } from './components/OpportunityForm';
+import Layout from './components/Layout';
 
 const instanceUrl = import.meta.env.VITE_API_URL || window.location.origin
 const defaultListOp = 'eq'; // default operator for list filters
@@ -107,10 +108,10 @@ export const App = () => {
         <Resource
             key="opportunities"
             name="opportunities"
+            create={canAccess('create','opportunities')?<OpportunityCreate />:undefined}
             list={canAccess('list','opportunities')?<OpportunityList />:undefined}
+            edit={canAccess('edit','opportunities')?<OpportunityEdit />:undefined}
             show={canAccess('show','opportunities')?<OpportunityShow />:undefined}
-            edit={canAccess('edit','opportunities')?<Edit><OpportunityForm /></Edit>:undefined}
-            create={canAccess('create','opportunities')?<Create><OpportunityForm /></Create>:undefined}
             options={{ label: 'Opportunities', model: schema?.opportunities }}
         />
     ];

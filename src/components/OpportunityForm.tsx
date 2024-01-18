@@ -1,8 +1,9 @@
 import {
-    SimpleForm, BooleanInput, TextInput,
+    BooleanInput, TextInput,
     SelectInput, Labeled, ReferenceArrayInput, CheckboxGroupInput,
     required,
 } from 'react-admin';
+import React from 'react';
 import { Rating } from '@mui/material';
 
 import { useController } from 'react-hook-form';
@@ -22,7 +23,7 @@ const RatingInput = ({ source }: { source: string }) => {
 };
 
 export const OpportunityForm = () => (
-    <SimpleForm>
+    <>
             <div className='text-xl'>Key essentials</div>
             <TextInput source="position_title" fullWidth validate={required()}/>
             <TextInput source="company_name" fullWidth validate={required()}/>
@@ -81,5 +82,5 @@ export const OpportunityForm = () => (
                 { id: 'other', name: 'Other' },
             ]} fullWidth />
             <TextInput source="additional_detail" fullWidth />
-    </SimpleForm>
+    </>
 );

@@ -9,9 +9,7 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build:frontend": "vite build",
-    "build:backend": "node esbuild.mjs",
-    "build": "npm run clean && npm run build:backend && npm run build:frontend",
+    "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "type-check": "tsc --noEmit"
@@ -20,7 +18,6 @@
     "@libsql/client": "^0.4.0-pre.7",
     "@subzerocloud/auth": "^2.0.0",
     "@subzerocloud/rest": "^2.0.0",
-    "better-sqlite3": "^9.2.2",
     "express": "^4.18.2"
   },
   "overrides": {
@@ -50,8 +47,6 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "dotenv-expand": "^10.0.0",
-    "esbuild": "^0.19.2",
-    "esbuild-plugin-copy": "^2.1.1",
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.7",
     "passport": "^0.7.0",

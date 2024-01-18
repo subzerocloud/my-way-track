@@ -4,42 +4,38 @@ import { Card, CardContent, } from '@mui/material';
 import { Title, } from 'react-admin';
 import { Card as TremorCard, Text, Metric, BarChart } from "@tremor/react";
 
-import { useGetList } from 'react-admin';
+import {
+    TopToolbar,useGetList
+} from 'react-admin';
 import { useClient, Schema, PostgrestResponse, PostgrestSingleResponse } from '@subzerocloud/ra-subzero';
 
+
+// const valueFormatter = (number: number) => `${Intl.NumberFormat("us").format(number).toString()} kg`;
 const Dashboard = (props: { schema?: Schema, resources?: string[] }) => {
     const { schema } = props;
-    if (!schema) return null; // wait for the schema to be loaded
-
-    // define the state variables
-    const [totalStages, setTotalStages] = useState(0);
-    const [stagesOrder, setStagesOrder] = useState({});
-    const [openOpportunities, setOpenOpportunities] = useState<any>([]);
-    const [avgDaysOpen, setAvgDaysOpen] = useState<any>(0);
-    const [avgProgress, setAvgProgress] = useState<any>(0);
-    const [perWeekApplications, setPerWeekApplications] = useState<any>([]);
-
-    // load the stages
+    if (!schema) return null;
+    const client = useClient();
     const { data: stages, isLoading} = useGetList(
         'stages',
         { sort: { field: 'order_index', order: 'ASC' } }
     );
+    const [totalStages, setTotalStages] = useState(0);
+    const [stagesOrder, setStagesOrder] = useState({});
     useEffect(() => {
-        if (!stages || isLoading) return;
+        if(!stages || isLoading) return;
         setTotalStages(stages.length);
         const order = {};
-        stages.forEach((stage, index) => {
+        stages.forEach((stage,index) => {
             order[stage.id] = index;
         });
         setStagesOrder(order);
     }, [stages, isLoading]);
-
-    // use the subzero client to make calls to the api that leverage the analytics features
-    const client = useClient();
+    const [openOpportunities, setOpenOpportunities] = useState<any>([]);
+    const [avgDaysOpen, setAvgDaysOpen] = useState<any>(0);
+    const [avgProgress, setAvgProgress] = useState<any>(0);
+    const [perWeekApplications, setPerWeekApplications] = useState<any>([]);
     useEffect(() => {
         if(!stagesOrder || !totalStages) return;
-
-        // get the number of applications per week
         client
             .from('opportunities')
             .select(`
@@ -48,11 +44,12 @@ const Dashboard = (props: { schema?: Schema, resources?: string[] }) => {
             `)
             // @ts-ignore
             .groupby('week')
-            .then(({ data }) => {
+            .then(({ data, error }) => {
+                //console.info('by week', data);
                 setPerWeekApplications(data);
             });
-
         // get the average number of days the applications are open
+        // use created_on and updated_on to calculate the number of days
         client
             .from('opportunities')
             .select(`
@@ -60,10 +57,10 @@ const Dashboard = (props: { schema?: Schema, resources?: string[] }) => {
             `)
             .is('close_reason', 'null')
             .single()
-            .then(({ data }:PostgrestSingleResponse<any>) => {
+            .then(({ data, error }:PostgrestSingleResponse<any>) => {
+                //console.info('avg days open', data.avg / 86400);
                 setAvgDaysOpen(Math.round(data.avg / 86400));
             });
-
         // get the current number of open applications
         client
             .from('opportunities')
@@ -72,11 +69,12 @@ const Dashboard = (props: { schema?: Schema, resources?: string[] }) => {
             `)
             .is('close_reason', 'null')
             .single()
-            .then(({ data }:PostgrestSingleResponse<any>) => {
+            .then(({ data, error }:PostgrestSingleResponse<any>) => {
+                //console.info('open applications', data.count);
                 setOpenOpportunities(data.count);
             });
-
-        // get the stages of all the open applications and calculate the average progress
+        
+        // get the stages of all the open applications
         client
             .from('opportunities')
             .select(`
@@ -84,7 +82,7 @@ const Dashboard = (props: { schema?: Schema, resources?: string[] }) => {
                 stage_ids
             `)
             .is('close_reason', 'null')
-            .then(({ data }:PostgrestResponse<any>) => {
+            .then(({ data, error }:PostgrestResponse<any>) => {
                 const averageProgress = data.reduce((acc, r) => {
                     const ids = JSON.parse(r.stage_ids);
                     const orderedStages = ids.map(id => stagesOrder[id]);
@@ -92,10 +90,11 @@ const Dashboard = (props: { schema?: Schema, resources?: string[] }) => {
                     const progress = Math.round((maxStageIndex / (totalStages - 1)) * 100);
                     return acc + progress;
                 }, 0) / data.length;
+                //console.info('average progress', averageProgress);
                 setAvgProgress(averageProgress);
             });
                 
-    }, [totalStages, stagesOrder]);
+    }, [stagesOrder, totalStages]);
 
     return (
         <Card sx={{marginTop: 3}}>

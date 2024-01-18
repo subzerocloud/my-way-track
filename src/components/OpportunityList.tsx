@@ -7,8 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { LinearProgress, Rating } from '@mui/material';
 import {OpportunityFilter} from './OpportunityFilter';
 
-// Capitalize hyphenated words
-function capitalize(str) {
+function capitalizeHyphenatedWords(str) {
     return typeof str !== 'string' ? str : str.split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
@@ -48,20 +47,30 @@ export const OpportunityList = () => {
                 <TextField source="position_title" />
                 <TextField source="company_name" />
                 <TextField source="company_website" />
-                <FunctionField source="company_size" render={r => `${capitalize(r.company_size)}`} />
+                <FunctionField source="company_size" render={
+                    r => `${capitalizeHyphenatedWords(r.company_size)}`
+                } />
                 <TextField source="company_contacts" />
-                <FunctionField source="sentiment" render={r => <Rating name="read-only" value={r.sentiment} readOnly />} />
+                {/* <NumberField source="sentiment" /> */}
+                <FunctionField source="sentiment" render={
+                    r => <Rating name="read-only" value={r.sentiment} readOnly />
+                } />
                 <TextField source="sentiment_detail" />
-                <FunctionField source="work_arrangement" render={r => `${capitalize(r.work_arrangement)}`} />
-                <FunctionField source="employment_type" render={r => `${capitalize(r.employment_type)}`} />
+                <FunctionField source="work_arrangement" render={
+                    r => `${capitalizeHyphenatedWords(r.work_arrangement)}`
+                } />
+                <FunctionField source="employment_type" render={
+                    r => `${capitalizeHyphenatedWords(r.employment_type)}`
+                } />
                 <TextField source="compensation" />
                 <TextField source="location" />
                 <BooleanField source="is_remote" looseValue />
                 <TextField source="external_url" />
                 <TextField source="description" />
-                <FunctionField source="close_reason" label="Status" render={r => !r.close_reason ? 'In Progress' : `${capitalize(r.close_reason)}`} />
+                <FunctionField source="close_reason" label="Status" render={
+                    r => !r.close_reason ? 'In Progress' : `${capitalizeHyphenatedWords(r.close_reason)}`
+                } />
                 <TextField source="additional_detail" />
-                {/* display progress based on the latest completed stage */}
                 <FunctionField source="stage_ids" label="Stage" render={
                     r => {
                         const ids = JSON.parse(r.stage_ids);

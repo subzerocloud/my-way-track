@@ -34,7 +34,7 @@ const runSql = (file: string, dbUri: string, rootDir: string) => {
         process.exit(1);
     }
     const normalizedFile = resolve(rootDir, file);
-    const normalizedDbUri = resolve(rootDir, dbUri);
+    const normalizedDbUri = resolve(rootDir, dbUri.replace('file:', ''));
     const sqlDir = dirname(normalizedFile);
     const sqlFile = basename(normalizedFile);
     const result = spawnSync('sqlite3', [normalizedDbUri, `.read ${sqlFile}`], { stdio: 'inherit', cwd: sqlDir });
