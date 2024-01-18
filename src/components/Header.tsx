@@ -51,7 +51,7 @@ const Header = () => {
                             </Tabs>
                         </Box>
                         <Box display="flex">
-                            <Box><InspectorButton/></Box>
+                            <Box><InspectorButton placeholder="UI Settings"/></Box>
                             <LoadingIndicator
                                 sx={{
                                     '& .RaLoadingIndicator-loader': {

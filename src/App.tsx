@@ -26,7 +26,7 @@ import { OpportunityCreate } from './components/OpportunityCreate';
 import { OpportunityEdit } from './components/OpportunityEdit';
 import { OpportunityList } from './components/OpportunityList';
 import { OpportunityShow } from './components/OpportunityShow';
-import Layout from './Layout';
+import Layout from './components/Layout';
 
 const instanceUrl = import.meta.env.VITE_API_URL || window.location.origin
 const defaultListOp = 'eq'; // default operator for list filters
