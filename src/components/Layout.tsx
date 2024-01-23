@@ -11,7 +11,8 @@ const Layout = ({ children }: LayoutProps) => (
         <CssBaseline />
         <Header />
         <Container
-            sx={{ maxWidth: { xl: '100%' } }}
+            sx={{ maxWidth: { xl: '100%', lg: '100%' } }}
+            id="test"
         >
             <main
                 id="main-content"

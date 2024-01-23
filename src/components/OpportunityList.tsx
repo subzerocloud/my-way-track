@@ -42,7 +42,24 @@ export const OpportunityList = () => {
                 </TopToolbar>
             }
         >
-            <DatagridConfigurable rowClick="show">
+            <DatagridConfigurable rowClick="show"
+                omit={[
+                    'id',
+                    'company_website',
+                    'company_size',
+                    'company_contacts',
+                    'sentiment_detail',
+                    'work_arrangement',
+                    'employment_type',
+                    'location',
+                    'is_remote',
+                    'external_url',
+                    'description',
+                    'additional_detail',
+                    'created_at',
+                    'updated_at'
+                ]}
+            >
                 <NumberField source="id" />
                 <TextField source="position_title" />
                 <TextField source="company_name" />
